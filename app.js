@@ -56,6 +56,35 @@ onValue(listRef, (snapshot) => {
 
     label.className = item.checked ? "checked" : "";
     label.textContent = item.text;
+    // 📷 Vytvoření inputu pro výběr souboru
+const fileInput = document.createElement("input");
+fileInput.type = "file";
+fileInput.accept = "image/*";
+fileInput.style.marginLeft = "10px";
+
+// 📁 Při výběru souboru nahraj do Firebase Storage
+fileInput.onchange = async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const storage = getStorage();
+  const storagePath = "images/" + key + ".jpg";
+  const fileRef = storageRef(storage, storagePath);
+
+  await uploadBytes(fileRef, file);
+  const downloadURL = await getDownloadURL(fileRef);
+
+  // 💾 Uložíme URL obrázku do položky v databázi
+  set(ref(db, "nakup/" + key), {
+    ...item,
+    imageUrl: downloadURL
+  });
+
+  console.log("✅ Obrázek nahrán:", downloadURL);
+};
+
+li.appendChild(fileInput);
+
     if (item.checked && item.checkedAt) {
   const countdownSpan = document.createElement("span");
   countdownSpan.style.marginLeft = "10px";
