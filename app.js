@@ -60,5 +60,13 @@ onValue(listRef, (snapshot) => {
     li.appendChild(label);
     itemList.appendChild(li);
   });
+  addBtn.onclick = () => {
+  console.log("Klik na přidat!");
+  const text = itemInput.value.trim();
+  if (text) {
+    push(listRef, { text: text, checked: false });
+    itemInput.value = "";
+  }
+};
 });
 
