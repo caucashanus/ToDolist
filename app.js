@@ -96,7 +96,7 @@ fileInput.onchange = async () => {
 
 
 
-    };
+   
 
     // 🖼️ Zobrazení obrázku
     if (item.imageUrl) {
