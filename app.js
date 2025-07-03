@@ -68,7 +68,7 @@ onValue(listRef, (snapshot) => {
       set(ref(db, "nakup/" + key), updatedItem);
     };
 
-    // 📷 Input pro obrázek
+// 📷 Input pro obrázek
 const fileInput = document.createElement("input");
 fileInput.type = "file";
 fileInput.accept = "image/*";
@@ -98,28 +98,7 @@ fileInput.onchange = async () => {
     console.error("❌ Chyba při uploadu nebo ukládání:", error);
   }
 };
-  const file = fileInput.files[0];
-  if (!file) return;
 
-  const storage = getStorage(); // ⬅️ přidat!
-  const fileRef = storageRef(storage, `images/${key}.jpg`);
-  await uploadBytes(fileRef, file);
-  const downloadURL = await getDownloadURL(fileRef);
-
-  // ✅ Uložit zpět do databáze i další vlastnosti
-  set(ref(db, "nakup/" + key), {
-    text: item.text,
-    checked: item.checked || false,
-    checkedAt: item.checkedAt || null,
-    imageUrl: downloadURL
-  });
-
-  console.log("✅ Obrázek nahrán:", downloadURL);
-};
-
-
-
-   
 
     // 🖼️ Zobrazení obrázku
     if (item.imageUrl) {
