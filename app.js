@@ -31,8 +31,10 @@ addBtn.onclick = () => {
 
 // Načítání seznamu v reálném čase
 onValue(listRef, (snapshot) => {
+  console.log("Data z Firebase:", snapshot.val());
   itemList.innerHTML = "";
-  snapshot.forEach((childSnapshot) => {
+  snapshot.forEach((childSnapshot) => { ... });
+});
     const item = childSnapshot.val();
     const key = childSnapshot.key;
 
