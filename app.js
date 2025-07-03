@@ -55,6 +55,31 @@ onValue(listRef, (snapshot) => {
 
     label.className = item.checked ? "checked" : "";
     label.textContent = item.text;
+    if (item.checked && item.checkedAt) {
+  const countdownSpan = document.createElement("span");
+  countdownSpan.style.marginLeft = "10px";
+  countdownSpan.style.fontSize = "0.9em";
+  countdownSpan.style.color = "#ccc";
+
+  const updateCountdown = () => {
+    const now = Date.now();
+    const timeLeft = item.checkedAt + 86400000 - now; // 24 hodin - nynější čas
+
+    if (timeLeft <= 0) {
+      // čas vypršel – smažeme položku
+      set(ref(db, "nakup/" + key), null);
+    } else {
+      const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      countdownSpan.textContent = `⏳ ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    }
+  };
+
+  updateCountdown(); // první výpočet hned
+  setInterval(updateCountdown, 60000); // pak každou minutu
+
+  label.appendChild(countdownSpan);
+}
 
     checkbox.onchange = () => {
   const updatedItem = {
