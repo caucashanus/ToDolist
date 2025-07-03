@@ -31,6 +31,9 @@ addBtn.onclick = () => {
   }
 };
 
+console.log("👉 Ref databáze:", listRef);
+console.log("👉 Element itemList:", document.getElementById("itemList"));
+
 // Načítání seznamu v reálném čase
 onValue(listRef, (snapshot) => {
   console.log("📦 Data z Firebase:", snapshot.val());
