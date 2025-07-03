@@ -107,7 +107,7 @@ li.appendChild(fileInput);
 
   const updateCountdown = () => {
     const now = Date.now();
-    const timeLeft = item.checkedAt + 86400000 - now; // 24 hodin - nynější čas
+    const timeLeft = item.checkedAt + 7200000 - now; // 2 hodiny odpoctu
 
     if (timeLeft <= 0) {
       // čas vypršel – smažeme položku
