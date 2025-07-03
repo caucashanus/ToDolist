@@ -83,9 +83,12 @@ onValue(listRef, (snapshot) => {
       const downloadURL = await getDownloadURL(fileRef);
 
       set(ref(db, "nakup/" + key), {
-        ...item,
-        imageUrl: downloadURL
-      });
+  text: item.text,
+  checked: item.checked || false,
+  checkedAt: item.checkedAt || null,
+  imageUrl: downloadURL
+});
+
     };
 
     // 🖼️ Zobrazení obrázku
