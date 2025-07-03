@@ -34,20 +34,28 @@ addBtn.onclick = () => {
 console.log("👉 Ref databáze:", listRef);
 console.log("👉 Element itemList:", document.getElementById("itemList"));
 
-// Načítání seznamu v reálném čase
+// Přidávání nové položky
+addBtn.onclick = () => {
+  console.log("Klik na přidat!");
+  const text = itemInput.value.trim();
+  if (text) {
+    push(listRef, { text: text, checked: false });
+    itemInput.value = "";
+  }
+};
+
+// Posluchač změn v databázi
 onValue(listRef, (snapshot) => {
   const data = snapshot.val();
   console.log("📦 Data z Firebase:", data);
 
-  if (data) {
-    itemList.innerHTML = JSON.stringify(data, null, 2);
-  } else {
+  itemList.innerHTML = ""; // smažeme seznam
+
+  if (!data) {
     itemList.innerHTML = "<li>Žádné položky</li>";
+    return;
   }
-});
 
-
-  itemList.innerHTML = "";
   snapshot.forEach((childSnapshot) => {
     const item = childSnapshot.val();
     const key = childSnapshot.key;
@@ -72,13 +80,5 @@ onValue(listRef, (snapshot) => {
     li.appendChild(label);
     itemList.appendChild(li);
   });
-  addBtn.onclick = () => {
-  console.log("Klik na přidat!");
-  const text = itemInput.value.trim();
-  if (text) {
-    push(listRef, { text: text, checked: false });
-    itemInput.value = "";
-  }
-};
 });
 
