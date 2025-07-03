@@ -57,11 +57,17 @@ onValue(listRef, (snapshot) => {
     label.textContent = item.text;
 
     checkbox.onchange = () => {
-      set(ref(db, "nakup/" + key), {
-        text: item.text,
-        checked: checkbox.checked
-      });
-    };
+  const updatedItem = {
+    text: item.text,
+    checked: checkbox.checked
+  };
+
+  if (checkbox.checked) {
+    updatedItem.checkedAt = Date.now(); // ⏱️ uložíme čas
+  }
+
+  set(ref(db, "nakup/" + key), updatedItem);
+};
 
     li.appendChild(checkbox);
     li.appendChild(label);
