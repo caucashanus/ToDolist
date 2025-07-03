@@ -32,7 +32,6 @@ addBtn.onclick = () => {
   }
 };
 
-// Posluchač změn v databázi
 onValue(listRef, (snapshot) => {
   const data = snapshot.val();
   console.log("📦 Data z Firebase:", data);
@@ -56,48 +55,62 @@ onValue(listRef, (snapshot) => {
 
     label.className = item.checked ? "checked" : "";
     label.textContent = item.text;
-        // 🖼️ Pokud má položka obrázek, zobraz ho
-if (item.imageUrl) {
-  const img = document.createElement("img");
-  img.src = item.imageUrl;
-  img.alt = "Příloha";
-  img.style.maxWidth = "100px";
-  img.style.maxHeight = "100px";
-  img.style.borderRadius = "8px";
-  img.style.marginTop = "8px";
-  img.style.boxShadow = "0 0 6px rgba(0,0,0,0.3)";
-  
-  li.appendChild(img);
-}
-    
+
+    checkbox.onchange = () => {
+      const checkedAt = checkbox.checked ? Date.now() : null;
+
+      set(ref(db, "nakup/" + key), {
+        ...item,
+        checked: checkbox.checked,
+        checkedAt: checkedAt
+      });
+    };
+
+    // 🖼️ Pokud má položka obrázek, zobraz ho
+    if (item.imageUrl) {
+      const img = document.createElement("img");
+      img.src = item.imageUrl;
+      img.alt = "Příloha";
+      img.style.maxWidth = "100px";
+      img.style.maxHeight = "100px";
+      img.style.borderRadius = "8px";
+      img.style.marginTop = "8px";
+      img.style.boxShadow = "0 0 6px rgba(0,0,0,0.3)";
+      li.appendChild(img);
+    }
+
     // 📷 Vytvoření inputu pro výběr souboru
-const fileInput = document.createElement("input");
-fileInput.type = "file";
-fileInput.accept = "image/*";
-fileInput.style.marginLeft = "10px";
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.marginLeft = "10px";
 
-// 📁 Při výběru souboru nahraj do Firebase Storage
-fileInput.onchange = async () => {
-  const file = fileInput.files[0];
-  if (!file) return;
+    // 📁 Při výběru souboru nahraj do Firebase Storage
+    fileInput.onchange = async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
 
-  const storage = getStorage();
-  const storagePath = "images/" + key + ".jpg";
-  const fileRef = storageRef(storage, storagePath);
+      const storage = getStorage();
+      const storagePath = "images/" + key + ".jpg";
+      const fileRef = storageRef(storage, storagePath);
 
-  await uploadBytes(fileRef, file);
-  const downloadURL = await getDownloadURL(fileRef);
+      await uploadBytes(fileRef, file);
+      const downloadURL = await getDownloadURL(fileRef);
 
-  // 💾 Uložíme URL obrázku do položky v databázi
-  set(ref(db, "nakup/" + key), {
-    ...item,
-    imageUrl: downloadURL
+      // 💾 Uložíme URL obrázku do položky v databázi
+      await set(ref(db, "nakup/" + key), {
+        ...item,
+        imageUrl: downloadURL
+      });
+
+      console.log("✅ Obrázek nahrán:", downloadURL);
+    };
+
+    li.appendChild(checkbox);
+    li.appendChild(label);
+    li.appendChild(fileInput);
+    itemList.appendChild(li);
   });
-
-  console.log("✅ Obrázek nahrán:", downloadURL);
-};
-
-li.appendChild(fileInput);
 
     if (item.checked && item.checkedAt) {
   const countdownSpan = document.createElement("span");
