@@ -69,25 +69,31 @@ onValue(listRef, (snapshot) => {
     };
 
     // 📷 Input pro obrázek
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.style.marginLeft = "10px";
+const fileInput = document.createElement("input");
+fileInput.type = "file";
+fileInput.accept = "image/*";
+fileInput.style.marginLeft = "10px";
 
-    fileInput.onchange = async () => {
-      const file = fileInput.files[0];
-      if (!file) return;
+fileInput.onchange = async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
 
-      const fileRef = storageRef(storage, `images/${key}.jpg`);
-      await uploadBytes(fileRef, file);
-      const downloadURL = await getDownloadURL(fileRef);
+  const storage = getStorage(); // ⬅️ přidat!
+  const fileRef = storageRef(storage, `images/${key}.jpg`);
+  await uploadBytes(fileRef, file);
+  const downloadURL = await getDownloadURL(fileRef);
 
-      set(ref(db, "nakup/" + key), {
-  text: item.text,
-  checked: item.checked || false,
-  checkedAt: item.checkedAt || null,
-  imageUrl: downloadURL
-});
+  // ✅ Uložit zpět do databáze i další vlastnosti
+  set(ref(db, "nakup/" + key), {
+    text: item.text,
+    checked: item.checked || false,
+    checkedAt: item.checkedAt || null,
+    imageUrl: downloadURL
+  });
+
+  console.log("✅ Obrázek nahrán:", downloadURL);
+};
+
 
     };
 
