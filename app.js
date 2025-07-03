@@ -15,5 +15,45 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const listRef = ref(db, "nakup");
 
+// UI prvky
+const itemInput = document.getElementById("itemInput");
+const addBtn = document.getElementById("addBtn");
+const itemList = document.getElementById("itemList");
 
+// Přidání nové položky
+addBtn.onclick = () => {
+  const text = itemInput.value.trim();
+  if (text) {
+    push(listRef, { text: text, checked: false });
+    itemInput.value = "";
+  }
+};
 
+// Načítání seznamu v reálném čase
+onValue(listRef, (snapshot) => {
+  itemList.innerHTML = "";
+  snapshot.forEach((childSnapshot) => {
+    const item = childSnapshot.val();
+    const key = childSnapshot.key;
+
+    const li = document.createElement("li");
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = item.checked;
+
+    label.className = item.checked ? "checked" : "";
+    label.textContent = item.text;
+
+    checkbox.onchange = () => {
+      set(ref(db, "nakup/" + key), {
+        text: item.text,
+        checked: checkbox.checked
+      });
+    };
+
+    li.appendChild(checkbox);
+    li.appendChild(label);
+    itemList.appendChild(li);
+  });
+});
