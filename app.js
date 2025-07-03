@@ -4,7 +4,7 @@ import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/fi
 const firebaseConfig = {
   apiKey: "AIzaSyBerVfLy960LY0vw0d0HYwVfQKK_gmtyVI",
   authDomain: "nakupni-seznam-e6d66.firebaseapp.com",
-  databaseURL: "https://nakupni-seznam-e6d66-default-rtdb.europe-west1.firebasedatabase.app",
+  databaseURL: "databaseURL: "https://nakupni-seznam-e6d66-default-rtdb.firebaseio.com",
   projectId: "nakupni-seznam-e6d66",
   storageBucket: "nakupni-seznam-e6d66.appspot.com",
   messagingSenderId: "49601954404",
