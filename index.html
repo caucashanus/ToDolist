@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nákupní seznam</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 1.5rem;
+    }
+
+    #form {
+      margin: 20px;
+      display: flex;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    #itemInput {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px 0 0 8px;
+      font-size: 16px;
+    }
+
+    #addBtn {
+      padding: 10px 15px;
+      background-color: #00c853;
+      color: #fff;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    li {
+      background-color: #1e1e1e;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    li input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.5);
+    }
+
+    .checked {
+      text-decoration: line-through;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛒 Nákupní seznam</h1>
+  <div id="form">
+    <input type="text" id="itemInput" placeholder="Zadej položku…" />
+    <button id="addBtn">Přidat</button>
+  </div>
+  <ul id="itemList"></ul>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
