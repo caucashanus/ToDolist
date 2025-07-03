@@ -60,16 +60,11 @@ onValue(listRef, (snapshot) => {
 if (item.imageUrl) {
   const img = document.createElement("img");
   img.src = item.imageUrl;
-  img.alt = "Příloha";
-  img.style.maxWidth = "100px";
-  img.style.maxHeight = "100px";
-  img.style.borderRadius = "8px";
+  img.style.maxWidth = "100%";
   img.style.marginTop = "8px";
-  img.style.boxShadow = "0 0 6px rgba(0,0,0,0.3)";
-  
   li.appendChild(img);
 }
-    
+
     // 📷 Vytvoření inputu pro výběr souboru
 const fileInput = document.createElement("input");
 fileInput.type = "file";
@@ -79,14 +74,15 @@ fileInput.style.marginLeft = "10px";
 // 📁 Při výběru souboru nahraj do Firebase Storage
 fileInput.onchange = async () => {
   const file = fileInput.files[0];
-  if (!file) return;
+  if (file) {
+    const storageRef = ref(storage, `images/${key}.jpg`);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
 
-  const storage = getStorage();
-  const storagePath = "images/" + key + ".jpg";
-  const fileRef = storageRef(storage, storagePath);
-
-  await uploadBytes(fileRef, file);
-  const downloadURL = await getDownloadURL(fileRef);
+    // ➕ Zapiš URL obrázku do databáze
+    set(ref(db, "nakup/" + key + "/imageUrl"), downloadURL);
+  }
+};
 
   // 💾 Uložíme URL obrázku do položky v databázi
   set(ref(db, "nakup/" + key), {
