@@ -52,6 +52,20 @@ onValue(listRef, (snapshot) => {
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    // 🖼️ Pokud má položka obrázek, zobraz ho
+if (item.imageUrl) {
+  const img = document.createElement("img");
+  img.src = item.imageUrl;
+  img.alt = "Příloha";
+  img.style.maxWidth = "100px";
+  img.style.maxHeight = "100px";
+  img.style.borderRadius = "8px";
+  img.style.marginTop = "8px";
+  img.style.boxShadow = "0 0 6px rgba(0,0,0,0.3)";
+  
+  li.appendChild(img);
+}
+    
     checkbox.checked = item.checked;
 
     label.className = item.checked ? "checked" : "";
