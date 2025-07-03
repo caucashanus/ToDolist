@@ -80,5 +80,3 @@ onValue(listRef, (snapshot) => {
     li.appendChild(label);
     itemList.appendChild(li);
   });
-});
-
