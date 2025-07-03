@@ -36,7 +36,16 @@ console.log("👉 Element itemList:", document.getElementById("itemList"));
 
 // Načítání seznamu v reálném čase
 onValue(listRef, (snapshot) => {
-  console.log("📦 Data z Firebase:", snapshot.val());
+  const data = snapshot.val();
+  console.log("📦 Data z Firebase:", data);
+
+  if (data) {
+    itemList.innerHTML = JSON.stringify(data, null, 2);
+  } else {
+    itemList.innerHTML = "<li>Žádné položky</li>";
+  }
+});
+
 
   itemList.innerHTML = "";
   snapshot.forEach((childSnapshot) => {
