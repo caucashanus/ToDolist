@@ -57,16 +57,46 @@ onValue(listRef, (snapshot) => {
     label.textContent = item.text;
 
     checkbox.onchange = () => {
-      const checkedAt = checkbox.checked ? Date.now() : null;
-
-      set(ref(db, "nakup/" + key), {
-        ...item,
+      const updatedItem = {
+        text: item.text,
         checked: checkbox.checked,
-        checkedAt: checkedAt
-      });
+        imageUrl: item.imageUrl || null,
+      };
+
+      if (checkbox.checked) {
+        updatedItem.checkedAt = Date.now(); // ⏱️
+      }
+
+      set(ref(db, "nakup/" + key), updatedItem);
     };
 
-    // 🖼️ Pokud má položka obrázek, zobraz ho
+    // 📷 File input pro obrázek
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.marginLeft = "10px";
+
+    fileInput.onchange = async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const storage = getStorage();
+      const storagePath = `images/${key}.jpg`;
+      const fileRef = storageRef(storage, storagePath);
+
+      await uploadBytes(fileRef, file);
+      const downloadURL = await getDownloadURL(fileRef);
+
+      // 📦 Aktualizujeme záznam v databázi včetně imageUrl
+      set(ref(db, "nakup/" + key), {
+        ...item,
+        imageUrl: downloadURL,
+      });
+
+      console.log("✅ Obrázek nahrán:", downloadURL);
+    };
+
+    // 🖼️ Zobrazení obrázku, pokud existuje
     if (item.imageUrl) {
       const img = document.createElement("img");
       img.src = item.imageUrl;
@@ -79,38 +109,37 @@ onValue(listRef, (snapshot) => {
       li.appendChild(img);
     }
 
-    // 📷 Vytvoření inputu pro výběr souboru
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.style.marginLeft = "10px";
+    // ⏳ Odpočet, pokud položka je zaškrtnutá
+    if (item.checked && item.checkedAt) {
+      const countdownSpan = document.createElement("span");
+      countdownSpan.style.marginLeft = "10px";
+      countdownSpan.style.fontSize = "0.9em";
+      countdownSpan.style.color = "#ccc";
 
-    // 📁 Při výběru souboru nahraj do Firebase Storage
-    fileInput.onchange = async () => {
-      const file = fileInput.files[0];
-      if (!file) return;
+      const updateCountdown = () => {
+        const now = Date.now();
+        const timeLeft = item.checkedAt + 7200000 - now; // 2 hodiny
 
-      const storage = getStorage();
-      const storagePath = "images/" + key + ".jpg";
-      const fileRef = storageRef(storage, storagePath);
+        if (timeLeft <= 0) {
+          set(ref(db, "nakup/" + key), null); // smaž položku
+        } else {
+          const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+          const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+          countdownSpan.textContent = `⏳ ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+        }
+      };
 
-      await uploadBytes(fileRef, file);
-      const downloadURL = await getDownloadURL(fileRef);
-
-      // 💾 Uložíme URL obrázku do položky v databázi
-      await set(ref(db, "nakup/" + key), {
-        ...item,
-        imageUrl: downloadURL
-      });
-
-      console.log("✅ Obrázek nahrán:", downloadURL);
-    };
+      updateCountdown();
+      setInterval(updateCountdown, 60000); // aktualizace každou minutu
+      label.appendChild(countdownSpan);
+    }
 
     li.appendChild(checkbox);
     li.appendChild(label);
     li.appendChild(fileInput);
     itemList.appendChild(li);
   });
+});
 
     if (item.checked && item.checkedAt) {
   const countdownSpan = document.createElement("span");
