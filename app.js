@@ -52,7 +52,11 @@ onValue(listRef, (snapshot) => {
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    // 🖼️ Pokud má položka obrázek, zobraz ho
+    checkbox.checked = item.checked;
+
+    label.className = item.checked ? "checked" : "";
+    label.textContent = item.text;
+        // 🖼️ Pokud má položka obrázek, zobraz ho
 if (item.imageUrl) {
   const img = document.createElement("img");
   img.src = item.imageUrl;
@@ -66,10 +70,6 @@ if (item.imageUrl) {
   li.appendChild(img);
 }
     
-    checkbox.checked = item.checked;
-
-    label.className = item.checked ? "checked" : "";
-    label.textContent = item.text;
     // 📷 Vytvoření inputu pro výběr souboru
 const fileInput = document.createElement("input");
 fileInput.type = "file";
