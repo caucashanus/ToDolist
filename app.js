@@ -31,17 +31,10 @@ addBtn.onclick = () => {
 
 // Načítání seznamu v reálném čase
 onValue(listRef, (snapshot) => {
-  console.log("📦 Data z Firebase:", snapshot.val());  // <-- přidaný log pro debug
+  console.log("📦 Data z Firebase:", snapshot.val());
+
   itemList.innerHTML = "";
   snapshot.forEach((childSnapshot) => {
-    // ... stávající kód
-  });
-});
-
-  console.log("Data z Firebase:", snapshot.val());
-  itemList.innerHTML = "";
-  snapshot.forEach((childSnapshot) => { ... });
-});
     const item = childSnapshot.val();
     const key = childSnapshot.key;
 
@@ -66,3 +59,4 @@ onValue(listRef, (snapshot) => {
     itemList.appendChild(li);
   });
 });
+
