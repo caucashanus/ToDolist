@@ -1,38 +1,25 @@
-console.log("✅ app.js spuštěn");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBerVfLy960LY0vw0d0HYwVfQKK_gmtyVI",
   authDomain: "nakupni-seznam-e6d66.firebaseapp.com",
-  databaseURL: "https://nakupni-seznam-e6d66-default-rtdb.firebaseio.com", 
+  databaseURL: "https://nakupni-seznam-e6d66-default-rtdb.firebaseio.com",
   projectId: "nakupni-seznam-e6d66",
   storageBucket: "nakupni-seznam-e6d66.appspot.com",
   messagingSenderId: "49601954404",
   appId: "1:49601954404:web:1351599fea2f676f921571"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const listRef = ref(db, "nakup");
 
-// UI prvky
 const itemInput = document.getElementById("itemInput");
 const addBtn = document.getElementById("addBtn");
 const itemList = document.getElementById("itemList");
 
-// Přidání nové položky
-addBtn.onclick = () => {
-  const text = itemInput.value.trim();
-  if (text) {
-    push(listRef, { text: text, checked: false });
-    itemInput.value = "";
-  }
-};
-
-console.log("👉 Ref databáze:", listRef);
-console.log("👉 Element itemList:", document.getElementById("itemList"));
+console.log("✅ app.js spuštěn");
 
 // Přidávání nové položky
 addBtn.onclick = () => {
@@ -49,7 +36,7 @@ onValue(listRef, (snapshot) => {
   const data = snapshot.val();
   console.log("📦 Data z Firebase:", data);
 
-  itemList.innerHTML = ""; // smažeme seznam
+  itemList.innerHTML = "";
 
   if (!data) {
     itemList.innerHTML = "<li>Žádné položky</li>";
@@ -80,3 +67,4 @@ onValue(listRef, (snapshot) => {
     li.appendChild(label);
     itemList.appendChild(li);
   });
+});
