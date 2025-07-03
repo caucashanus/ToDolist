@@ -75,6 +75,29 @@ fileInput.accept = "image/*";
 fileInput.style.marginLeft = "10px";
 
 fileInput.onchange = async () => {
+  try {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const storage = getStorage();
+    const fileRef = storageRef(storage, `images/${key}.jpg`);
+    console.log("🔄 Začínám upload souboru...");
+    await uploadBytes(fileRef, file);
+    console.log("✅ Upload hotov, načítám URL...");
+    const downloadURL = await getDownloadURL(fileRef);
+    console.log("✅ URL načtena:", downloadURL);
+
+    await set(ref(db, "nakup/" + key), {
+      text: item.text,
+      checked: item.checked || false,
+      checkedAt: item.checkedAt || null,
+      imageUrl: downloadURL
+    });
+    console.log("✅ Data s URL uložená v DB");
+  } catch (error) {
+    console.error("❌ Chyba při uploadu nebo ukládání:", error);
+  }
+};
   const file = fileInput.files[0];
   if (!file) return;
 
